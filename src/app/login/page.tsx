@@ -18,8 +18,11 @@ export default function LoginPage() {
             <BaseText variant="title">Welcome</BaseText>
 
             <div className="flex flex-col gap-4">
-              <BaseTextField label="Email" />
-              <BasePasswordInput label="Password" />
+              <BaseTextField label="Email" autoComplete="email" />
+              <BasePasswordInput
+                label="Password"
+                autoComplete="current-password"
+              />
             </div>
           </div>
 
