@@ -5,6 +5,7 @@ import { Roboto } from "next/font/google";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 import { Container } from "@mui/material";
+import { cn } from "@/utils/style";
 
 const roboto = Roboto({
   weight: ["300", "400", "500", "700"],
@@ -24,11 +25,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={roboto.variable}>
+    <html lang="en" className={cn(roboto.variable, roboto.className)}>
       <body>
         <AppRouterCacheProvider options={{ enableCssLayer: true }}>
           <ThemeProvider theme={theme}>
-            <Container className="min-h-screen max-w-md">{children}</Container>
+            <Container className="min-h-screen max-w-md p-0">
+              {children}
+            </Container>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
