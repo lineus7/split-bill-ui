@@ -1,9 +1,6 @@
 import { Container } from "@mui/material";
-import { BasePasswordInput } from "../../components/BasePasswordInput";
-import { BaseTextField } from "../../components/BaseTextField";
-import { BaseButton } from "../../components/BaseButton";
-import { BaseText } from "../../components/BaseText";
 import Image from "next/image";
+import LoginForm from "./components/LoginForm";
 
 export default function LoginPage() {
   return (
@@ -13,21 +10,7 @@ export default function LoginPage() {
       </Container>
 
       <Container className="h-[60%] bg-light-300 flex flex-col">
-        <div className="flex-1 py-10 flex flex-col justify-between">
-          <div className="flex flex-col gap-4">
-            <BaseText variant="title">Welcome</BaseText>
-
-            <div className="flex flex-col gap-4">
-              <BaseTextField label="Email" autoComplete="email" />
-              <BasePasswordInput
-                label="Password"
-                autoComplete="current-password"
-              />
-            </div>
-          </div>
-
-          <BaseButton label="Login" />
-        </div>
+        <LoginForm />
       </Container>
     </div>
   );
