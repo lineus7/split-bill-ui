@@ -1,8 +1,8 @@
-import { Button, Container } from "@mui/material";
-import { BasePasswordInput } from "./components/BasePasswordInput";
-import { BaseTextField } from "./components/BaseTextField";
-import { BaseButton } from "./components/BaseButton";
-import { BaseText } from "./components/BaseText";
+import { Container } from "@mui/material";
+import { BasePasswordInput } from "../components/BasePasswordInput";
+import { BaseTextField } from "../components/BaseTextField";
+import { BaseButton } from "../components/BaseButton";
+import { BaseText } from "../components/BaseText";
 
 export default function Home() {
   return (
@@ -15,7 +15,7 @@ export default function Home() {
             <div className="flex flex-col gap-4">
               <BaseText variant="title">Welcome</BaseText>
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-4">
                 <BaseTextField label="Email" />
                 <BasePasswordInput label="Password" />
               </div>
