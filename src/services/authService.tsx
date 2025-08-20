@@ -1,16 +1,10 @@
-import { fetchBase } from "@/fetch/fetchBase";
+import { api } from "@/fetch/api";
 
 export const authService = {
     login: async (email: string, password: string) => {
-        return await fetchBase("/auth/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                email,
-                password,
-            }),
+        return api.post("/auth/login", {
+            email,
+            password,
         });
     },
 };
