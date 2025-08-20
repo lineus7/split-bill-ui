@@ -1,10 +1,17 @@
 "use client";
 
 import { Alert, Snackbar } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRootToastStore } from "@/store/useRootToastStore";
 
 export const RootToast = () => {
     const [open, setOpen] = useState(true);
+    const { state } = useRootToastStore();
+
+    useEffect(() => {
+        setOpen(state.message !== "");
+    }, [state]);
+
     return (
         <Snackbar
             open={open}
@@ -13,8 +20,8 @@ export const RootToast = () => {
             anchorOrigin={{ vertical: "top", horizontal: "center" }}
             sx={{ position: "absolute" }}
         >
-            <Alert severity="success" variant="filled" className="w-full">
-                This is a success Alert inside a Snackbar!
+            <Alert severity={state.type} variant="filled" className="w-full">
+                {state.message}
             </Alert>
         </Snackbar>
     );
