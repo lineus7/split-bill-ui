@@ -4,19 +4,23 @@ import { BaseButton } from "@/components/BaseButton";
 import { BasePasswordInput } from "@/components/BasePasswordInput";
 import { BaseText } from "@/components/BaseText";
 import { BaseTextField } from "@/components/BaseTextField";
-import { useActionState } from "react";
-import { loginUser } from "../actions/action";
-import { toast } from "@/utils/toast";
+import { useState } from "react";
+import { useLogin } from "../hooks/useLogin";
 
 export default function LoginForm() {
-    const [state, formAction, pending] = useActionState(loginUser, {
-        errors: undefined,
-        message: "",
+    const [form, setForm] = useState({
+        email: "",
+        password: "",
     });
+    const { fetch: login, loading, error } = useLogin(form);
+
     return (
         <form
-            action={formAction}
             className="flex-1 py-10 flex flex-col justify-between"
+            onSubmit={(e) => {
+                e.preventDefault();
+                login();
+            }}
         >
             <div className="flex flex-col gap-4">
                 <BaseText variant="title">Welcome</BaseText>
@@ -26,20 +30,28 @@ export default function LoginForm() {
                         label="Email"
                         autoComplete="email"
                         name="email"
-                        error={!!state.errors?.email}
-                        helperText={state.errors?.email?.[0]}
+                        value={form.email}
+                        onChange={(e) =>
+                            setForm({ ...form, email: e.target.value })
+                        }
+                        error={error?.errors?.email}
+                        helperText={error?.errors?.email?.[0]}
                     />
                     <BasePasswordInput
                         label="Password"
                         autoComplete="current-password"
                         name="password"
-                        error={!!state.errors?.password}
-                        helperText={state.errors?.password?.[0]}
+                        value={form.password}
+                        onChange={(e) =>
+                            setForm({ ...form, password: e.target.value })
+                        }
+                        error={error?.errors?.password}
+                        helperText={error?.errors?.password?.[0]}
                     />
                 </div>
             </div>
 
-            <BaseButton type="submit" label="Login" loading={pending} />
+            <BaseButton type="submit" label="Login" disabled={loading} />
         </form>
     );
 }
