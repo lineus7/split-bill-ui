@@ -1,39 +1,47 @@
 "use server";
 
+import { authService } from "@/services/authService";
 import { z } from "zod";
 
-const schema = z.object({
-    email: z.string().email({
-        message: "Invalid email format",
-    }),
-    password: z.string().min(6, {
-        message: "Password must be at least 6 characters long",
-    }),
-});
-
 export type LoginState = {
-    errors?: Record<string, string[]>;
-    message?: string;
+    errors?: Record<string, any>;
+    data?: any;
 };
 
-export const loginUser = async (
+export const loginAction = async (
     _initialState: LoginState,
     formData: FormData
 ) => {
-    const validatedFields = schema.safeParse({
-        email: formData.get("email"),
-        password: formData.get("password"),
-    });
+    try {
+        const schema = z.object({
+            email: z.string().email({
+                message: "Invalid email format",
+            }),
+            password: z.string().min(6, {
+                message: "Password must be at least 6 characters long",
+            }),
+        });
 
-    if (!validatedFields.success) {
+        const validatedFields = schema.safeParse({
+            email: formData.get("email"),
+            password: formData.get("password"),
+        });
+
+        if (!validatedFields.success) {
+            throw validatedFields.error.flatten().fieldErrors;
+        }
+
+        const response = await authService.login(
+            validatedFields.data.email,
+            validatedFields.data.password
+        );
+
         return {
-            errors: validatedFields.error.flatten().fieldErrors,
-            message: "Invalid email or password",
+            data: response,
+        };
+    } catch (error: any) {
+        return {
+            errors: error,
         };
     }
-
-    return {
-        errors: undefined,
-        message: "Login successful",
-    };
 };
