@@ -1,57 +1,103 @@
-const baseFetching = async (input: RequestInfo | URL, init?: RequestInit) => {
-    const base = process.env.NEXT_PUBLIC_BASE_URL;
-    const headers = new Headers(init?.headers);
-    headers.set("Content-Type", "application/json");
-    const response = await fetch(`${base}${input}`, {
-        ...init,
-        headers,
-        credentials: "include",
-    });
-    if (!response.ok) {
-        const error = await response.json();
-        throw error;
-    }
-    return response.json();
-};
+import { cookies } from "next/headers";
 
-export const api = {
-    get: async (input: RequestInfo | URL, init?: RequestInit) => {
-        return baseFetching(input, {
-            ...init,
-            method: "GET",
-        });
-    },
-    post: async (
-        input: RequestInfo | URL,
-        body: Record<string, any>,
-        init?: RequestInit
-    ) => {
-        return baseFetching(input, {
-            ...init,
+class ApiClient {
+    private baseURL: string;
+    private headers: Headers;
+
+    constructor(baseURL: string, headers: Record<string, string> = {}) {
+        this.baseURL = baseURL;
+        this.headers = new Headers(headers);
+        if (!this.headers.has("Content-Type")) {
+            this.headers.set("Content-Type", "application/json");
+        }
+    }
+
+    private async request<T>(
+        endpoint: RequestInfo | URL,
+        options: RequestInit = {}
+    ): Promise<T> {
+        const url = `${this.baseURL}${endpoint}`;
+
+        const cookieStore = await cookies();
+        const token = cookieStore.get("access_token");
+        if (token) {
+            options.headers = {
+                ...options.headers,
+                Authorization: `Bearer ${token.value}`,
+            };
+        }
+
+        const config: RequestInit = {
+            ...options,
+            headers: {
+                ...Object.fromEntries(this.headers.entries()),
+                ...options.headers,
+            },
+            credentials: "include",
+        };
+
+        const response = await fetch(url, config);
+
+        if (!response.ok) {
+            let errorResponse;
+            try {
+                errorResponse = await response.json();
+            } catch {
+                errorResponse = await response.text();
+            }
+            throw errorResponse;
+        }
+
+        // Handle empty response body
+        const contentType = response.headers.get("content-type");
+        if (response.status === 204 || !contentType) {
+            return Promise.resolve(undefined as T);
+        }
+
+        if (contentType.includes("application/json")) {
+            return response.json() as Promise<T>;
+        }
+
+        return response.text() as unknown as Promise<T>;
+    }
+
+    public get<T>(
+        endpoint: RequestInfo | URL,
+        options?: RequestInit
+    ): Promise<T> {
+        return this.request<T>(endpoint, { ...options, method: "GET" });
+    }
+
+    public post<T>(
+        endpoint: RequestInfo | URL,
+        body: any,
+        options?: RequestInit
+    ): Promise<T> {
+        return this.request<T>(endpoint, {
+            ...options,
             method: "POST",
             body: JSON.stringify(body),
         });
-    },
-    put: async (
-        input: RequestInfo | URL,
-        body: Record<string, any>,
-        init?: RequestInit
-    ) => {
-        return baseFetching(input, {
-            ...init,
+    }
+
+    public put<T>(
+        endpoint: RequestInfo | URL,
+        body: any,
+        options?: RequestInit
+    ): Promise<T> {
+        return this.request<T>(endpoint, {
+            ...options,
             method: "PUT",
             body: JSON.stringify(body),
         });
-    },
-    delete: async (
-        input: RequestInfo | URL,
-        body: Record<string, any>,
-        init?: RequestInit
-    ) => {
-        return baseFetching(input, {
-            ...init,
-            method: "DELETE",
-            body: JSON.stringify(body),
-        });
-    },
-};
+    }
+
+    public delete<T>(
+        endpoint: RequestInfo | URL,
+        options?: RequestInit
+    ): Promise<T> {
+        return this.request<T>(endpoint, { ...options, method: "DELETE" });
+    }
+}
+
+export const api = new ApiClient(process.env.NEXT_PUBLIC_BASE_URL || "");
