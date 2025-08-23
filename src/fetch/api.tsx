@@ -67,7 +67,8 @@ class ApiClient {
                 throw error;
             }
 
-            throw new ApiError("Something went wrong", 0, error);
+            const message = extractErrorMessage(error);
+            throw new ApiError(message, 0, error);
         }
     }
 

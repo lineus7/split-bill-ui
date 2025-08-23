@@ -8,7 +8,11 @@ export const useErrorNotifier = (error: any) => {
         if (error) {
             if (error?.isApiError) {
                 const errorApi = error as ApiErrorProps;
-                toast.error(errorApi.message);
+                if (errorApi.status === 0) {
+                    toast.error("Something went wrong");
+                } else {
+                    toast.error(errorApi.message);
+                }
             } else {
                 const errorString = extractErrorMessage(error);
                 toast.error(errorString);
