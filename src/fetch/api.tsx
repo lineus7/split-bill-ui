@@ -1,4 +1,6 @@
 import { cookies } from "next/headers";
+import { ApiError } from "./ApiError";
+import { extractErrorMessage } from "@/utils/error";
 
 class ApiClient {
     private baseURL: string;
@@ -16,49 +18,57 @@ class ApiClient {
         endpoint: RequestInfo | URL,
         options: RequestInit = {}
     ): Promise<T> {
-        const url = `${this.baseURL}${endpoint}`;
+        try {
+            const url = `${this.baseURL}${endpoint}`;
 
-        const cookieStore = await cookies();
-        const token = cookieStore.get("access_token");
-        if (token) {
-            options.headers = {
-                ...options.headers,
-                Authorization: `Bearer ${token.value}`,
-            };
-        }
-
-        const config: RequestInit = {
-            ...options,
-            headers: {
-                ...Object.fromEntries(this.headers.entries()),
-                ...options.headers,
-            },
-            credentials: "include",
-        };
-
-        const response = await fetch(url, config);
-
-        if (!response.ok) {
-            let errorResponse;
-            try {
-                errorResponse = await response.json();
-            } catch {
-                errorResponse = await response.text();
+            const cookieStore = await cookies();
+            const token = cookieStore.get("access_token");
+            if (token) {
+                options.headers = {
+                    ...options.headers,
+                    Authorization: `Bearer ${token.value}`,
+                };
             }
-            throw errorResponse;
-        }
 
-        // Handle empty response body
-        const contentType = response.headers.get("content-type");
-        if (response.status === 204 || !contentType) {
-            return Promise.resolve(undefined as T);
-        }
+            const config: RequestInit = {
+                ...options,
+                headers: {
+                    ...Object.fromEntries(this.headers.entries()),
+                    ...options.headers,
+                },
+                credentials: "include",
+            };
 
-        if (contentType.includes("application/json")) {
-            return response.json() as Promise<T>;
-        }
+            const response = await fetch(url, config);
 
-        return response.text() as unknown as Promise<T>;
+            if (!response.ok) {
+                let errorData;
+                try {
+                    errorData = await response.json();
+                } catch {
+                    errorData = await response.text();
+                }
+                const message = extractErrorMessage(errorData);
+                throw new ApiError(message, response.status, errorData);
+            }
+
+            const contentType = response.headers.get("content-type");
+            if (response.status === 204 || !contentType) {
+                return Promise.resolve(undefined as T);
+            }
+
+            if (contentType.includes("application/json")) {
+                return response.json() as Promise<T>;
+            }
+
+            return response.text() as unknown as Promise<T>;
+        } catch (error) {
+            if (error instanceof ApiError) {
+                throw error;
+            }
+
+            throw new ApiError("Something went wrong", 0, error);
+        }
     }
 
     public get<T>(

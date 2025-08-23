@@ -5,7 +5,8 @@ import { authService } from "@/services/authService";
 import { cookies } from "next/headers";
 
 export type LoginState = {
-    errors?: Record<string, any>;
+    error?: Record<string, any>;
+    validationErrors?: Record<string, string[]>;
     data?: any;
 };
 
@@ -23,7 +24,7 @@ export async function loginAction(_initialState: any, formData: FormData) {
 
     if (!validatedData.success) {
         return {
-            errors: validatedData.error.flatten().fieldErrors,
+            validationErrors: validatedData.error.flatten().fieldErrors,
         };
     }
 
@@ -40,7 +41,7 @@ export async function loginAction(_initialState: any, formData: FormData) {
         };
     } catch (error: any) {
         return {
-            errors: error,
+            error,
         };
     }
 }

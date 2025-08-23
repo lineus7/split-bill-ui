@@ -19,11 +19,12 @@ export default function LoginForm() {
     });
     const [_, startTransition] = useTransition();
     const [state, formAction, pending] = useActionState(loginAction, {
-        errors: undefined,
+        error: undefined,
         data: undefined,
+        validationErrors: undefined,
     });
 
-    useErrorNotifier(state.errors);
+    useErrorNotifier(state.error);
     useEffect(() => {
         if (state.data) {
             localStorage.setItem("user", JSON.stringify(state.data.User));
@@ -55,8 +56,8 @@ export default function LoginForm() {
                         onChange={(e) =>
                             setForm({ ...form, email: e.target.value })
                         }
-                        error={state.errors?.email}
-                        helperText={state.errors?.email?.[0]}
+                        error={!!state.validationErrors?.email}
+                        helperText={state.validationErrors?.email?.[0]}
                     />
                     <BasePasswordInput
                         label="Password"
@@ -66,8 +67,8 @@ export default function LoginForm() {
                         onChange={(e) =>
                             setForm({ ...form, password: e.target.value })
                         }
-                        error={state.errors?.password}
-                        helperText={state.errors?.password?.[0]}
+                        error={!!state.validationErrors?.password}
+                        helperText={state.validationErrors?.password?.[0]}
                     />
                 </div>
             </div>
