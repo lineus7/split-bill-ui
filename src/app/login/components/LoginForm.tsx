@@ -33,44 +33,42 @@ export default function LoginForm() {
         }
     }, [state.data]);
 
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+        startTransition(() => {
+            formAction(formData);
+        });
+    };
+
     return (
         <form
-            onSubmit={(e) => {
-                e.preventDefault();
-                const formData = new FormData(e.currentTarget);
-                startTransition(() => {
-                    formAction(formData);
-                });
-            }}
+            onSubmit={handleSubmit}
             className="flex-1 py-10 flex flex-col justify-between"
         >
             <div className="flex flex-col gap-4">
-                <BaseText variant="title">Welcome</BaseText>
-
-                <div className="flex flex-col gap-4">
-                    <BaseTextField
-                        label="Email"
-                        autoComplete="email"
-                        name="email"
-                        value={form.email}
-                        onChange={(e) =>
-                            setForm({ ...form, email: e.target.value })
-                        }
-                        error={!!state.validationErrors?.email}
-                        helperText={state.validationErrors?.email?.[0]}
-                    />
-                    <BasePasswordInput
-                        label="Password"
-                        autoComplete="current-password"
-                        name="password"
-                        value={form.password}
-                        onChange={(e) =>
-                            setForm({ ...form, password: e.target.value })
-                        }
-                        error={!!state.validationErrors?.password}
-                        helperText={state.validationErrors?.password?.[0]}
-                    />
-                </div>
+                <BaseTextField
+                    label="Email"
+                    autoComplete="email"
+                    name="email"
+                    value={form.email}
+                    onChange={(e) =>
+                        setForm({ ...form, email: e.target.value })
+                    }
+                    error={!!state.validationErrors?.email}
+                    helperText={state.validationErrors?.email?.[0]}
+                />
+                <BasePasswordInput
+                    label="Password"
+                    autoComplete="current-password"
+                    name="password"
+                    value={form.password}
+                    onChange={(e) =>
+                        setForm({ ...form, password: e.target.value })
+                    }
+                    error={!!state.validationErrors?.password}
+                    helperText={state.validationErrors?.password?.[0]}
+                />
             </div>
 
             <BaseButton type="submit" label="Login" loading={pending} />
