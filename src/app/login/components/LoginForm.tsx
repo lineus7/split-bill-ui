@@ -1,9 +1,9 @@
 "use client";
 
-import { BaseButton } from "@/components/BaseButton";
-import { BasePasswordInput } from "@/components/BasePasswordInput";
-import { BaseText } from "@/components/BaseText";
-import { BaseTextField } from "@/components/BaseTextField";
+import { BaseButton } from "@/app/components/BaseButton";
+import { BasePasswordInput } from "@/app/components/BasePasswordInput";
+import { BaseText } from "@/app/components/BaseText";
+import { BaseTextField } from "@/app/components/BaseTextField";
 import { useActionState, useEffect, useTransition } from "react";
 import { loginAction } from "../actions/loginAction";
 import { useErrorNotifier } from "@/hooks/useErrorNotifier";

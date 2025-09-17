@@ -1,4 +1,4 @@
-import { BaseText } from "@/components/BaseText";
+import { BaseText } from "@/app/components/BaseText";
 import SearchIcon from "@mui/icons-material/Search";
 
 export default function DashboardPage() {

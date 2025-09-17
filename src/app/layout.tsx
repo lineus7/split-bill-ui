@@ -6,7 +6,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "./theme";
 import { Container } from "@mui/material";
 import { cn } from "@/utils/style";
-import { RootToast } from "@/components/RootToast";
+import { RootToast } from "@/app/components/RootToast";
 
 const roboto = Roboto({
     weight: ["300", "400", "500", "700"],
