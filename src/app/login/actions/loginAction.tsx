@@ -8,9 +8,13 @@ export type LoginState = {
     error?: Record<string, any>;
     validationErrors?: Record<string, string[]>;
     data?: any;
+    submittedData?: any;
 };
 
-export async function loginAction(_initialState: any, formData: FormData) {
+export async function loginAction(
+    _initialState: any,
+    formData: FormData
+): Promise<LoginState> {
     const schema = z.object({
         email: z.string().email("Invalid email format"),
         password: z
@@ -25,6 +29,7 @@ export async function loginAction(_initialState: any, formData: FormData) {
     if (!validatedData.success) {
         return {
             validationErrors: validatedData.error.flatten().fieldErrors,
+            submittedData: validatedData.data,
         };
     }
 
@@ -38,10 +43,12 @@ export async function loginAction(_initialState: any, formData: FormData) {
 
         return {
             data: response.Data,
+            submittedData: validatedData.data,
         };
     } catch (error: any) {
         return {
             error,
+            submittedData: validatedData.data,
         };
     }
 }

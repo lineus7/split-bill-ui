@@ -2,27 +2,26 @@
 
 import { BaseButton } from "@/app/components/BaseButton";
 import { BasePasswordInput } from "@/app/components/BasePasswordInput";
-import { BaseText } from "@/app/components/BaseText";
 import { BaseTextField } from "@/app/components/BaseTextField";
-import { useActionState, useEffect, useTransition } from "react";
+import { useActionState, useEffect } from "react";
 import { loginAction } from "../actions/loginAction";
 import { useErrorNotifier } from "@/hooks/useErrorNotifier";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "@/utils/toast";
 
+const initialState = {
+    error: undefined,
+    data: undefined,
+    validationErrors: undefined,
+    submittedData: undefined,
+};
+
 export default function LoginForm() {
     const router = useRouter();
-    const [form, setForm] = useState({
-        email: "",
-        password: "",
-    });
-    const [_, startTransition] = useTransition();
-    const [state, formAction, pending] = useActionState(loginAction, {
-        error: undefined,
-        data: undefined,
-        validationErrors: undefined,
-    });
+    const [state, formAction, pending] = useActionState(
+        loginAction,
+        initialState
+    );
 
     useErrorNotifier(state.error);
     useEffect(() => {
@@ -33,17 +32,9 @@ export default function LoginForm() {
         }
     }, [state.data]);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        startTransition(() => {
-            formAction(formData);
-        });
-    };
-
     return (
         <form
-            onSubmit={handleSubmit}
+            action={formAction}
             className="flex-1 py-10 flex flex-col justify-between"
         >
             <div className="flex flex-col gap-4">
@@ -51,10 +42,7 @@ export default function LoginForm() {
                     label="Email"
                     autoComplete="email"
                     name="email"
-                    value={form.email}
-                    onChange={(e) =>
-                        setForm({ ...form, email: e.target.value })
-                    }
+                    defaultValue={state.submittedData?.email}
                     error={!!state.validationErrors?.email}
                     helperText={state.validationErrors?.email?.[0]}
                 />
@@ -62,10 +50,7 @@ export default function LoginForm() {
                     label="Password"
                     autoComplete="current-password"
                     name="password"
-                    value={form.password}
-                    onChange={(e) =>
-                        setForm({ ...form, password: e.target.value })
-                    }
+                    defaultValue={state.submittedData?.password}
                     error={!!state.validationErrors?.password}
                     helperText={state.validationErrors?.password?.[0]}
                 />
