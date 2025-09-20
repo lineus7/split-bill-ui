@@ -1,0 +1,55 @@
+"use client";
+
+import { useRouter } from "next/router";
+import { useActionState, useEffect } from "react";
+import { loginAction } from "../actions/loginAction";
+import { useErrorNotifier } from "@/hooks/useErrorNotifier";
+import { toast } from "@/utils/toast";
+import { InputForm } from "@/app/components/InputForm";
+import { BaseButton } from "@/app/components/BaseButton";
+
+const initialState = {
+    error: undefined,
+    data: undefined,
+    validationErrors: undefined,
+    submittedData: undefined,
+};
+
+export const LoginForm = () => {
+    const router = useRouter();
+    const [state, formAction, pending] = useActionState(
+        loginAction,
+        initialState
+    );
+
+    useErrorNotifier(state.error);
+    useEffect(() => {
+        if (state.data) {
+            localStorage.setItem("user", JSON.stringify(state.data.User));
+            router.push("/dashboard");
+            toast.success("Login Success");
+        }
+    }, [state.data]);
+    return (
+        <form action={formAction} className="space-y-4">
+            <InputForm
+                name="email"
+                label="Email"
+                placeholder="Enter your email"
+                autoComplete="email"
+                error={state.validationErrors?.email[0]}
+            />
+
+            <InputForm
+                type="password"
+                name="password"
+                label="Password"
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                error={state.validationErrors?.password[0]}
+            />
+
+            <BaseButton type="submit">Login</BaseButton>
+        </form>
+    );
+};
