@@ -21,15 +21,21 @@ export async function loginAction(
             .string()
             .min(6, "Password must be at least 6 characters long"),
     });
-    const validatedData = schema.safeParse({
+
+    const inputForm = {
         email: formData.get("email"),
         password: formData.get("password"),
+    };
+
+    const validatedData = schema.safeParse({
+        email: inputForm.email,
+        password: inputForm.password,
     });
 
     if (!validatedData.success) {
         return {
             validationErrors: validatedData.error.flatten().fieldErrors,
-            submittedData: validatedData.data,
+            submittedData: inputForm,
         };
     }
 
@@ -43,12 +49,12 @@ export async function loginAction(
 
         return {
             data: response.Data,
-            submittedData: validatedData.data,
+            submittedData: inputForm,
         };
     } catch (error: any) {
         return {
             error,
-            submittedData: validatedData.data,
+            submittedData: inputForm,
         };
     }
 }
