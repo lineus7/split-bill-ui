@@ -7,6 +7,7 @@ import { toast } from "@/utils/toast";
 import { InputForm } from "@/app/components/InputForm";
 import { BaseButton } from "@/app/components/BaseButton";
 import { useRouter } from "next/navigation";
+import Loading from "@/app/components/Loading";
 
 const initialState = {
     error: undefined,
@@ -32,27 +33,30 @@ export const LoginForm = () => {
     }, [state.data]);
 
     return (
-        <form action={formAction} className="space-y-4">
-            <InputForm
-                name="email"
-                label="Email"
-                placeholder="Enter your email"
-                autoComplete="email"
-                defaultValue={state.submittedData?.email}
-                error={state.validationErrors?.email?.[0]}
-            />
+        <>
+            <form action={formAction} className="space-y-4">
+                <InputForm
+                    name="email"
+                    label="Email"
+                    placeholder="Enter your email"
+                    autoComplete="email"
+                    defaultValue={state.submittedData?.email}
+                    error={state.validationErrors?.email?.[0]}
+                />
 
-            <InputForm
-                type="password"
-                name="password"
-                label="Password"
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                defaultValue={state.submittedData?.password}
-                error={state.validationErrors?.password?.[0]}
-            />
+                <InputForm
+                    type="password"
+                    name="password"
+                    label="Password"
+                    placeholder="Enter your password"
+                    autoComplete="current-password"
+                    defaultValue={state.submittedData?.password}
+                    error={state.validationErrors?.password?.[0]}
+                />
 
-            <BaseButton type="submit">Login</BaseButton>
-        </form>
+                <BaseButton type="submit">Login</BaseButton>
+            </form>
+            {pending && <Loading />}
+        </>
     );
 };
