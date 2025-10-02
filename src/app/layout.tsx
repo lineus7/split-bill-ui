@@ -7,6 +7,7 @@ import theme from "./theme";
 import { Container } from "@mui/material";
 import { cn } from "@/utils/style";
 import { RootToast } from "@/app/components/RootToast";
+import { RootModal } from "@/app/components/RootModal";
 
 const roboto = Roboto({
     weight: ["300", "400", "500", "700"],
@@ -32,6 +33,7 @@ export default function RootLayout({
                     <ThemeProvider theme={theme}>
                         <Container className="relative min-h-screen max-w-md p-0">
                             <RootToast />
+                            <RootModal />
                             {children}
                         </Container>
                     </ThemeProvider>
