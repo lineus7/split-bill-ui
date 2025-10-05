@@ -1,6 +1,7 @@
 import { api } from "@/fetch/api";
 import { BaseResponse } from "@/types/response";
 import { User } from "@/types/user";
+import { cookiesStore } from "@/utils/cookies";
 import { cookies } from "next/headers";
 
 export interface RegisterData {
@@ -20,15 +21,15 @@ export const authService = {
             }
         );
     },
+    register: async (data: RegisterData) => {
+        return api.post<BaseResponse<null>>("/auth/register", data);
+    },
     logout: async () => {
         try {
-            (await cookies()).delete("access_token");
+            await cookiesStore.clear();
             return { success: true };
         } catch (error) {
             return { success: false };
         }
-    },
-    register: async (data: RegisterData) => {
-        return api.post<BaseResponse<null>>("/auth/register", data);
     },
 };

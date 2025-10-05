@@ -3,6 +3,7 @@
 import z from "zod";
 import { authService } from "@/services/authService";
 import { cookies } from "next/headers";
+import { cookiesStore } from "@/utils/cookies";
 
 export type LoginState = {
     error?: Record<string, any>;
@@ -45,7 +46,8 @@ export async function loginAction(
             validatedData.data.password
         );
 
-        (await cookies()).set("access_token", response.Data.Token);
+        await cookiesStore.accessToken.set(response.Data.Token);
+        await cookiesStore.user.set(response.Data.User);
 
         return {
             data: response.Data,

@@ -6,4 +6,10 @@ export type User = {
     Name: string;
     Username: string;
     Email: string;
+    RoleID: number;
+    IsActive: boolean;
+    Role: {
+        ID: number;
+        RoleName: string;
+    };
 };
