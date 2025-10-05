@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { ApiError } from "./ApiError";
 import { extractErrorMessage } from "@/utils/error";
+import { cookiesStore } from "@/utils/cookies";
 
 class ApiClient {
     private baseURL: string;
@@ -49,6 +50,9 @@ class ApiClient {
                     errorData = await response.text();
                 }
                 const message = extractErrorMessage(errorData);
+                if (response.status === 401) {
+                    await cookiesStore.clear();
+                }
                 throw new ApiError(message, response.status, errorData);
             }
 

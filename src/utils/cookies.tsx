@@ -11,7 +11,6 @@ export const cookiesStore = {
             (await cookies()).set("user", JSON.stringify(user), {
                 httpOnly: true,
                 sameSite: "strict",
-                maxAge: 60 * 60 * 24 * 30,
             });
         },
         delete: async () => {
@@ -27,7 +26,6 @@ export const cookiesStore = {
             (await cookies()).set("access_token", accessToken, {
                 httpOnly: true,
                 sameSite: "strict",
-                maxAge: 60 * 60 * 24 * 30,
             });
         },
         delete: async () => {
