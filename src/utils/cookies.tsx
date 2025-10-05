@@ -8,7 +8,11 @@ export const cookiesStore = {
             return user ? (JSON.parse(user.value) as User) : null;
         },
         set: async (user: User) => {
-            (await cookies()).set("user", JSON.stringify(user));
+            (await cookies()).set("user", JSON.stringify(user), {
+                httpOnly: true,
+                sameSite: "strict",
+                maxAge: 60 * 60 * 24 * 30,
+            });
         },
         delete: async () => {
             (await cookies()).delete("user");
@@ -20,7 +24,11 @@ export const cookiesStore = {
             return accessToken ? accessToken.value : null;
         },
         set: async (accessToken: string) => {
-            (await cookies()).set("access_token", accessToken);
+            (await cookies()).set("access_token", accessToken, {
+                httpOnly: true,
+                sameSite: "strict",
+                maxAge: 60 * 60 * 24 * 30,
+            });
         },
         delete: async () => {
             (await cookies()).delete("access_token");
