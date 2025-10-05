@@ -1,13 +1,12 @@
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { cookiesStore } from "@/utils/cookies";
 
 export default async function NoAuthLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("access_token");
+    const token = await cookiesStore.accessToken.get();
 
     if (token) {
         return redirect("/dashboard");

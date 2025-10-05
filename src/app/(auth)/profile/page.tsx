@@ -1,8 +1,13 @@
 import Link from "next/link";
 import MobileBottomNav from "@/app/components/MobileBottomNav";
 import { logoutAction } from "./actions/logoutAction";
+import { cookiesStore } from "@/utils/cookies";
 
-export default function ProfilePage() {
+export default async function ProfilePage() {
+    const user = await cookiesStore.user.get();
+    const name = user?.Name;
+    const username = user?.Username;
+    const initial = name?.[0];
     return (
         <div className="min-h-dvh flex flex-col bg-highlight-300 pb-24">
             <header className="sticky top-0 z-10 h-14 bg-light-400 border-b flex items-center justify-center">
@@ -14,11 +19,11 @@ export default function ProfilePage() {
                 <section className="rounded-2xl border border-light-600 bg-light-300 p-4">
                     <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-full bg-highlight-400 text-light-700 flex items-center justify-center font-bold">
-                            U
+                            {initial}
                         </div>
                         <div>
-                            <p className="text-sm font-semibold">Jane Doe</p>
-                            <p className="text-xs text-dark-400">@janedoe</p>
+                            <p className="text-sm font-semibold">{name}</p>
+                            <p className="text-xs text-dark-400">@{username}</p>
                         </div>
                     </div>
                 </section>
