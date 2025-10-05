@@ -3,6 +3,13 @@ import { BaseResponse } from "@/types/response";
 import { User } from "@/types/user";
 import { cookies } from "next/headers";
 
+export interface RegisterData {
+    name: string;
+    username: string;
+    email: string;
+    password: string;
+}
+
 export const authService = {
     login: async (email: string, password: string) => {
         return api.post<BaseResponse<{ User: User; Token: string }>>(
@@ -20,5 +27,8 @@ export const authService = {
         } catch (error) {
             return { success: false };
         }
+    },
+    register: async (data: RegisterData) => {
+        return api.post<BaseResponse<null>>("/auth/register", data);
     },
 };
