@@ -2,7 +2,6 @@
 
 import z from "zod";
 import { authService } from "@/services/authService";
-import { cookies } from "next/headers";
 import { cookiesStore } from "@/utils/cookies";
 
 export type LoginState = {

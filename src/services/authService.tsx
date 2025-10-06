@@ -2,7 +2,6 @@ import { api } from "@/fetch/api";
 import { BaseResponse } from "@/types/response";
 import { User } from "@/types/user";
 import { cookiesStore } from "@/utils/cookies";
-import { cookies } from "next/headers";
 
 export interface RegisterData {
     name: string;
