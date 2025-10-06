@@ -7,7 +7,7 @@ export const BaseButton = (
     return (
         <button
             className={cn(
-                "w-full rounded-xl bg-highlight-700 text-light-300 py-3 text-sm font-medium",
+                "w-full rounded-xl bg-highlight-700 text-light-300 py-3 text-sm font-medium cursor-pointer",
                 props.className
             )}
             {...props}
