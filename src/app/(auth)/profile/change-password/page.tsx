@@ -1,5 +1,4 @@
 import { MobileHeader } from "@/app/components/MobileHeader";
-import Link from "next/link";
 
 export default function ChangePasswordPage() {
     return (

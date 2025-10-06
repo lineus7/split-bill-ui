@@ -1,4 +1,3 @@
-import Link from "next/link";
 import MobileBottomNav from "@/app/components/MobileBottomNav";
 import { MobileHeader } from "@/app/components/MobileHeader";
 
