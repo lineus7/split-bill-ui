@@ -2,6 +2,7 @@ import Link from "next/link";
 import MobileBottomNav from "@/app/components/MobileBottomNav";
 import { logoutAction } from "./actions/logoutAction";
 import { cookiesStore } from "@/utils/cookies";
+import { MobileHeader } from "@/app/components/MobileHeader";
 
 export default async function ProfilePage() {
     const user = await cookiesStore.user.get();
@@ -10,9 +11,7 @@ export default async function ProfilePage() {
     const initial = name?.[0];
     return (
         <div className="min-h-dvh flex flex-col bg-highlight-300 pb-24">
-            <header className="sticky top-0 z-10 h-14 bg-light-400 border-b flex items-center justify-center">
-                <h1 className="text-[14px] font-bold">Profile</h1>
-            </header>
+            <MobileHeader title="Profile" />
 
             <main className="flex-1 p-4 space-y-4">
                 {/* User Info */}
