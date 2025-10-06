@@ -48,24 +48,22 @@ export async function registerAction(
         confirm_password: inputForm.confirm_password,
     });
 
-    let validationErrors: Record<string, string[]> = {};
-
     if (!validatedData.success) {
-        validationErrors = validatedData.error.flatten().fieldErrors;
+        return {
+            validationErrors: validatedData.error.flatten().fieldErrors,
+            submittedData: inputForm,
+        };
     }
 
     const data = validatedData.data as RegisterForm;
 
     if (data.password !== data.confirm_password) {
-        validationErrors.confirm_password = [
-            ...(validationErrors.confirm_password || []),
-            "Password and confirm password do not match",
-        ];
-    }
-
-    if (Object.keys(validationErrors).length > 0) {
         return {
-            validationErrors,
+            validationErrors: {
+                confirm_password: [
+                    "Password and confirm password do not match",
+                ],
+            },
             submittedData: inputForm,
         };
     }
