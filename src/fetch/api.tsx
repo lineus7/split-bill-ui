@@ -47,7 +47,7 @@ class ApiClient {
                 try {
                     errorData = await response.json();
                 } catch {
-                    errorData = await response.text();
+                    errorData = `${response.status} ${response.statusText}`;
                 }
                 const message = extractErrorMessage(errorData);
                 if (response.status === 401) {

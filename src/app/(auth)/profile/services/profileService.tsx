@@ -1,5 +1,3 @@
-"use server";
-
 import { api } from "@/fetch/api";
 import { BaseResponse } from "@/types/response";
 
