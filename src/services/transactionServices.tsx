@@ -4,9 +4,13 @@ import { Transaction } from "../types/transaction";
 
 export const transactionService = {
     getList: async (search: string) => {
-        console.log(`/transaction/list?search=${search}`);
         return api.get<BaseResponse<Transaction[]>>(
             `/transaction/list?search=${search}`
+        );
+    },
+    getDetail: async (uniqueId: string) => {
+        return api.get<BaseResponse<Transaction>>(
+            `/public/transaction-detail/${uniqueId}`
         );
     },
 };

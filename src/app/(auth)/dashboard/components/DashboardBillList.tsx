@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { formatRupiah } from "@/utils/common";
 import { DateTime } from "luxon";
-import { transactionService } from "@/app/(auth)/transaction/services/transactionServices";
+import { transactionService } from "@/services/transactionServices";
 
 export const DashboardBillList = async ({ search }: { search: string }) => {
     const response = await transactionService.getList(search);
