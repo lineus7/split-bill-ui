@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useAddBillStore } from "../../store/useAddBillStore";
+import { useAddBillStore } from "../../../store/useAddBillStore";
 import { BaseInput } from "@/app/components/BaseInput";
 import { BaseButton } from "@/app/components/BaseButton";
 import { toast } from "@/utils/toast";
